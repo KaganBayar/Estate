@@ -11,9 +11,9 @@ export abstract class BaseRepository<T> {
 
   abstract create(data: CreateDtoFor<T>): Promise<T>;
 
-  abstract delete(id: string): Promise<T>;
+  abstract delete(id: string): Promise<T | null> ;
 
-  abstract update(id: string, data: UpdateDtoFor<T>): Promise<T>;
+  abstract update(id: string, data: UpdateDtoFor<T>): Promise<T | null>;
 
   abstract findAll(): Promise<T[]>;
 }
