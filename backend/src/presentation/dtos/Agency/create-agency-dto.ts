@@ -1,4 +1,4 @@
-export interface CreateAgencyDto {
+export class CreateAgencyDto {
     name: string;
     totalMoney: number;
 }
