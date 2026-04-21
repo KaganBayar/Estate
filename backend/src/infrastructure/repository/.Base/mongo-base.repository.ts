@@ -1,9 +1,8 @@
 import { Model } from 'mongoose';
 import type { QueryFilter, UpdateQuery } from 'mongoose';
 import { CreateDtoFor, UpdateDtoFor } from '@/presentation/dtos/.Base/base-dtos';
-import { BaseRepository } from '@/infrastructure/repository/.Base/baseRepository';
-
-export abstract class MongoBaseRepository<T> implements BaseRepository<T> {
+import { IBaseRepository } from '@/domain/repository/.Base/IBaseRepository'
+export abstract class MongoBaseRepository<T> implements IBaseRepository<T> {
   constructor(protected readonly model: Model<T>) {}
 
   // Tüm kayıtları getir. pagination işlemi gerekir 
