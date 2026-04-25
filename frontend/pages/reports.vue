@@ -6,13 +6,17 @@ const store = useTransactionStore()
 const reports = computed(() => store.financialReports)
 
 const columns = [
-  { accessorKey: 'name', header: 'Agent Name' },
-  { accessorKey: 'listingCount', header: 'Listings' },
-  { accessorKey: 'sellingCount', header: 'Sales' },
-  { accessorKey: 'listingEarnings', header: 'Listing Earn.' },
-  { accessorKey: 'sellingEarnings', header: 'Selling Earn.' },
-  { accessorKey: 'totalEarnings', header: 'Total Earn.' }
+  { accessorKey: 'name', header: 'Agent Name', id: 'name' },
+  { accessorKey: 'listingCount', header: 'Listings', id: 'listing' },
+  { accessorKey: 'sellingCount', header: 'Sales', id: 'selling' },
+  { accessorKey: 'listingEarnings', header: 'Listing Earn.', id: 'listingEarnings' },
+  { accessorKey: 'sellingEarnings', header: 'Selling Earn.', id: 'sellingEarnings' },
+  { accessorKey: 'totalEarnings', header: 'Total Earn.', id: 'totalEarnings' }
 ]
+
+onMounted(() => {
+  store.fetchTransactions()
+})
 </script>
 
 <template>
@@ -50,12 +54,12 @@ const columns = [
           </template>
 
           <!-- Listing Count -->
-          <template #listingCount-cell="{ row }">
+          <template #listing-cell="{ row }">
             <UBadge color="secondary" variant="subtle" size="sm">{{ row.original.listingCount }}</UBadge>
           </template>
 
           <!-- Selling Count -->
-          <template #sellingCount-cell="{ row }">
+          <template #selling-cell="{ row }">
             <UBadge color="warning" variant="subtle" size="sm">{{ row.original.sellingCount }}</UBadge>
           </template>
 

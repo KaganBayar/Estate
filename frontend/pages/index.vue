@@ -1,16 +1,22 @@
 <script setup lang="ts">
-import type { Transaction } from '~/stores/transactions'
+import { useTransactionStore } from '~/stores/transactions'
+import type { ITransaction } from '~/types/entity/Transaction/ITransaction'
 import StatsSummary from '~/components/dashboard/StatsSummary.vue'
 import TransactionTable from '~/components/dashboard/TransactionTable.vue'
 import FinancialBreakdownModal from '~/components/dashboard/FinancialBreakdownModal.vue'
 
+const store = useTransactionStore()
 const isModalOpen = ref(false)
-const selectedTransaction = ref<Transaction | null>(null)
+const selectedTransaction = ref<ITransaction | null>(null)
 
-const handleViewBreakdown = (transaction: Transaction) => {
+const handleViewBreakdown = (transaction: ITransaction) => {
   selectedTransaction.value = transaction
   isModalOpen.value = true
 }
+
+onMounted(() => {
+  store.fetchTransactions()
+})
 </script>
 
 <template>

@@ -11,12 +11,12 @@ const stats = computed(() => [
   },
   {
     label: 'Pending (Agreement)',
-    value: store.transactions.filter(t => t.status === 'agreement').length,
+    value: store.transactions.filter(t => t.stage === 'agreement').length,
     color: 'info'
   },
   {
     label: 'Completed',
-    value: store.transactions.filter(t => t.status === 'completed').length,
+    value: store.transactions.filter(t => t.stage === 'completed').length,
     color: 'success'
   }
 ])
