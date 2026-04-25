@@ -1,5 +1,14 @@
+import { IsString, IsNumber, Min } from 'class-validator';
+
 export class CreatePropertyDto {
-    name: string;
-    price: number;
-    earnestMoney: number;
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  @Min(0)
+  price: number;
+
+  @IsNumber()
+  @Min(0)
+  earnestMoney: number;
 }

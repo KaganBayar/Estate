@@ -1,4 +1,10 @@
+import { IsString, IsNumber, Min } from 'class-validator';
+
 export class CreateAgencyDto {
-    name: string;
-    totalMoney: number;
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  @Min(0)
+  totalMoney: number;
 }
