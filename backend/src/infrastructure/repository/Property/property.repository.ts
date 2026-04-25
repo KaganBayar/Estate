@@ -6,8 +6,13 @@ import { MongoBaseRepository } from '../.Base/mongo-base.repository';
 import { IPropertyRepository } from '@/domain/repository/Property/IPropertyRepository';
 
 @Injectable()
-export class PropertyRepository extends MongoBaseRepository<Property> implements IPropertyRepository  {
-    constructor(@InjectModel(Property.name) private propertyModel : Model<Property>) {
-        super(propertyModel)
-    }
+export class PropertyRepository
+  extends MongoBaseRepository<Property>
+  implements IPropertyRepository
+{
+  constructor(
+    @InjectModel(Property.name) private propertyModel: Model<Property>,
+  ) {
+    super(propertyModel);
+  }
 }

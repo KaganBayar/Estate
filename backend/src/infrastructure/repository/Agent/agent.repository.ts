@@ -6,8 +6,11 @@ import { MongoBaseRepository } from '../.Base/mongo-base.repository';
 import { IAgentRepository } from '@/domain/repository/Agent/IAgentRepository';
 
 @Injectable()
-export class AgentRepository extends MongoBaseRepository<Agent> implements IAgentRepository {
-    constructor(@InjectModel(Agent.name) private agentModel : Model<Agent>) {
-        super(agentModel)
-    }
+export class AgentRepository
+  extends MongoBaseRepository<Agent>
+  implements IAgentRepository
+{
+  constructor(@InjectModel(Agent.name) private agentModel: Model<Agent>) {
+    super(agentModel);
+  }
 }

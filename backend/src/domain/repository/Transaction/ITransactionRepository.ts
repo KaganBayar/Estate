@@ -1,7 +1,4 @@
-import { Transaction } from "@/domain/entities/Transaction/transaction.schema";
-import { IBaseRepository } from "../.Base/IBaseRepository"; 
+import { Transaction } from '@/domain/entities/Transaction/transaction.schema';
+import { IBaseRepository } from '../.Base/IBaseRepository';
 
-export interface ITransactionRepository extends IBaseRepository<Transaction> {
-    
-}
-
+export interface ITransactionRepository extends IBaseRepository<Transaction> {}
