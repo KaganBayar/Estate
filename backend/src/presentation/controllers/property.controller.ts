@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 import { PropertyRepository } from '@/infrastructure/repository/Property/property.repository';
 import { CreatePropertyDto } from '@/presentation/dtos/Property/create-property-dto';
 import type { UpdateDtoFor } from '@/presentation/dtos/.Base/base-dtos';
@@ -24,7 +32,10 @@ export class PropertyController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateDto: UpdateDtoFor<Property>) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateDto: UpdateDtoFor<Property>,
+  ) {
     return this.propertyRepository.update(id, updateDto);
   }
 

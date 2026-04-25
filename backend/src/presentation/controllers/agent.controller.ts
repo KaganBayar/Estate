@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 import { AgentRepository } from '@/infrastructure/repository/Agent/agent.repository';
 import { CreateAgentDto } from '@/presentation/dtos/Agent/create-agent-dto';
 import type { UpdateDtoFor } from '@/presentation/dtos/.Base/base-dtos';
@@ -24,7 +32,10 @@ export class AgentController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateDto: UpdateDtoFor<Agent>) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateDto: UpdateDtoFor<Agent>,
+  ) {
     return this.agentRepository.update(id, updateDto);
   }
 

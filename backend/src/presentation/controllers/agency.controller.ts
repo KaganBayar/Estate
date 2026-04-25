@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 import { AgencyRepository } from '@/infrastructure/repository/Agency/agency.repository';
 import { CreateAgencyDto } from '@/presentation/dtos/Agency/create-agency-dto';
 import type { UpdateDtoFor } from '@/presentation/dtos/.Base/base-dtos';
@@ -24,7 +32,10 @@ export class AgencyController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateDto: UpdateDtoFor<Agency>) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateDto: UpdateDtoFor<Agency>,
+  ) {
     return this.agencyRepository.update(id, updateDto);
   }
 
