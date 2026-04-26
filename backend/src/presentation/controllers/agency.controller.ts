@@ -25,6 +25,7 @@ export class AgencyController {
 
   @Get(':id')
   async findById(@Param('id') id: string) {
+    //check if id parameter a mongodb id
     const isValid = Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Agency not found', 404);
     const findAgency = await this.agencyRepository.findById(id);
@@ -42,6 +43,7 @@ export class AgencyController {
     @Param('id') id: string,
     @Body() updateDto: UpdateDtoFor<Agency>,
   ) {
+    //check if id parameter a mongodb id
     const isValid = Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid ID', 400);
     const updatedAgency = await this.agencyRepository.update(id, updateDto);
@@ -51,6 +53,7 @@ export class AgencyController {
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+    //check if id parameter a mongodb id
     const isValid = Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid ID', 400);
     const deletedAgency = await this.agencyRepository.delete(id);

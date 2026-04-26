@@ -24,6 +24,7 @@ export class PropertyController {
   }
 
   @Get(':id')
+   //check if id parameter a mongodb id
   async findById(@Param('id') id: string) {
     const isValid = Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Property not found', 404);
@@ -42,6 +43,7 @@ export class PropertyController {
     @Param('id') id: string,
     @Body() updateDto: UpdateDtoFor<Property>,
   ) {
+     //check if id parameter a mongodb id
     const isValid = Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid ID', 400);
     const updatedProperty = await this.propertyRepository.update(id, updateDto);
@@ -51,6 +53,7 @@ export class PropertyController {
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+     //check if id parameter a mongodb id
     const isValid = Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid ID', 400);
     const deletedProperty = await this.propertyRepository.delete(id);

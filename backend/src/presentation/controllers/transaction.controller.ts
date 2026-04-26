@@ -31,6 +31,7 @@ export class TransactionController {
 
   @Get(':id')
   async findById(@Param('id') id: string) {
+     //check if id parameter a mongodb id
     const isValid = Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Transaction not found', 404);
     const findTransaction = await this.transactionRepository.findById(id);
@@ -41,6 +42,7 @@ export class TransactionController {
   @Get(':id/breakdown')
   async getBreakdown(@Param('id') id: string) {
     const isValid = Types.ObjectId.isValid(id);
+     //check if id parameter a mongodb id
     if (!isValid) throw new HttpException('Transaction not found', 404);
     const transaction = await this.transactionRepository.findById(id);
     if (!transaction) {
@@ -59,6 +61,7 @@ export class TransactionController {
     @Param('id') id: string,
     @Body() updateDto: UpdateDtoFor<Transaction>,
   ) {
+     //check if id parameter a mongodb id
     const isValid = Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid ID', 400);
 
@@ -74,6 +77,7 @@ export class TransactionController {
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
+     //check if id parameter a mongodb id
     const isValid = Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Invalid ID', 400);
     const deletedTransaction = await this.transactionRepository.delete(id);
