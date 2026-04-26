@@ -6,12 +6,15 @@ import type { ITransaction } from '~/types/entity/Transaction/ITransaction'
 import type { IFinancialBreakdown } from '~/types/api/IFinancialBreakdown'
 
 export const useTransactionStore = defineStore('transactions', {
-  state: () => ({
-    transactions: [] as ITransaction[],
-    isLoading: false,
-    error: null as string | null,
-    apiBase: 'http://127.0.0.1:3001/api'
-  }),
+  state: () => {
+    const config = useRuntimeConfig()
+    return {
+      transactions: [] as ITransaction[],
+      isLoading: false,
+      error: null as string | null,
+      apiBase: `${config.public.apiBase}/api`
+    }
+  },
 
   actions: {
     async fetchTransactions() {
