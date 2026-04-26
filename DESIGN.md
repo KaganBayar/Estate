@@ -1,53 +1,69 @@
-# Estate Management System - Technical Design
+# System Design Documentation
 
-Bu döküman, emlak yönetim sisteminin mimari kararlarını, veri modellemesini ve teknik yapısını özetler.
+## 🏗 Architecture
 
-## 1. Mimari Genel Bakış
+The project follows a **Clean Architecture** (layered) approach to ensure separation of concerns, maintainability, and testability.
 
-Proje, **Clean Architecture** (Temiz Mimari) prensipleri üzerine inşa edilmiştir. Bu yaklaşım, iş mantığını (business logic) dış araçlardan (veritabanı, framework, UI) bağımsız kılarak sürdürülebilirliği ve test edilebilirliği artırır.
+### Backend Layers
+1.  **Domain Layer (`src/domain`):** Contains entities (Schemas), and repository interfaces. This layer is independent of any external frameworks.
+2.  **Application Layer (`src/application`):** Contains Use Cases that orchestrate the flow of data to and from the domain entities.
+3.  **Infrastructure Layer (`src/infrastructure`):** Implements the repository interfaces using Mongoose and handles external service integrations.
+4.  **Presentation Layer (`src/presentation`):** Contains Controllers and DTOs to handle HTTP requests and responses.
 
-### Katmanlar
-
-*   **Domain (Alan):** En iç katmandır. İş kurallarını (Entities) ve depo arayüzlerini (Repository Interfaces) içerir. Hiçbir dış kütüphaneye bağımlılığı yoktur.
-*   **Application (Uygulama):** Kullanım senaryolarını (Use Cases) barındırır. Domain katmanını kullanarak iş akışlarını yönetir.
-*   **Infrastructure (Altyapı):** Dış dünya ile iletişim kuran katmandır. Veritabanı implementasyonları (Mongoose), servis entegrasyonları burada yer alır.
-*   **Presentation (Sunum):** API uç noktalarını (Controllers) ve veri transfer nesnelerini (DTOs) içerir.
-
-## 2. Teknoloji Yığını
-
-*   **Backend:** NestJS (TypeScript)
-*   **Database:** MongoDB (Mongoose ODM)
-*   **Frontend:** Nuxt 3 (Vue 3, Pinia)
-*   **Testing:** Jest & Supertest
-
-## 3. Veri Modeli
-
-### Entities
-*   **Agency:** Ofis bilgilerini ve toplam kazancı yönetir.
-*   **Agent:** Danışman bilgilerini ve bireysel komisyonları tutar.
-*   **Property:** Mülk detaylarını ve durumunu (Satılık, Satıldı vb.) saklar.
-*   **Transaction:** Satış sürecini, tarafları ve finansal dağılımı yönetir.
-
-## 4. Temel İş Akışları
-
-### Finansal Dağılım ve Komisyon Hesaplama
-İşlem aşaması `Closed` (Kapandı) olarak güncellendiğinde sistem otomatik olarak:
-1. Toplam komisyonu hesaplar.
-2. Ofis payını (%X) ayırır.
-3. Listeleme ve satış danışmanları arasında paylaştırır.
-4. İlgili bakiyeleri günceller.
-
-## 5. Repository Deseni
-
-Veritabanı işlemlerinde `BaseRepository` soyutlaması kullanılarak kod tekrarı önlenmiş ve standart bir CRUD yapısı oluşturulmuştur.
-*   Modern Mongoose standartları (`returnDocument: 'after'`) uygulanmıştır.
-*   Referanslı dokümanlar için otomatik `populate` mekanizmaları kurulmuştur.
-
-## 6. Frontend Yapısı
-
-*   **Dashboard:** İşlem özetleri ve genel istatistikler.
-*   **Modüler Bileşenler:** Finansal döküm modalleri ve dinamik tablolar.
-*   **State Management:** Pinia store'ları ile merkezi veri yönetimi.
+### Frontend Layers
+1.  **Pages:** Nuxt 3 file-based routing for different views (Dashboard, Reports).
+2.  **Components:** Reusable UI elements (Tables, Modals, Stats Cards).
+3.  **Stores (Pinia):** Centralized state management for transactions and financial data.
+4.  **Utils:** Shared logic for formatting and calculations.
 
 ---
-*Son Güncelleme: Nisan 2026*
+
+## 📊 Data Modeling
+
+The system uses MongoDB with the following entity relationships:
+
+- **Agency:** The top-level entity representing the company.
+- **Agent:** The subject of a transaction. Tracks deal count (selling deal, listing deal)
+- **Property:** The subject of a transaction. Tracks total money 
+- **Transaction:** The core entity that links a Property, a Listing Agent, and a Selling Agent. It tracks the `stage` and `totalServiceFee`.
+
+### Transaction Stages
+A transaction must follow a specific sequence:
+`agreement` ➡️ `earnest_money` ➡️ `title_deed` ➡️ `completed`
+
+---
+
+## 💰 Business Logic: Commission Policy
+
+The commission calculation is a critical part of the system and is implemented in the `GetFinancialBreakdownUseCase`.
+
+### Rules:
+1.  **Total Service Fee:** 100%
+2.  **Agency Share:** Always 50% of the total fee.
+3.  **Agent Share:** Remaining 50% of the total fee.
+    - **Scenario A (Same Agent):** If the listing agent and selling agent are the same person, they receive the full 50% agent share.
+    - **Scenario B (Different Agents):** The 50% agent share is split equally (25% each) between the listing and selling agents.
+
+### Implementation Strategy:
+We chose to **calculate the breakdown dynamically** rather than storing it. This ensures that if commission policies change in the future, historical data can be re-calculated or adjusted without database migrations, and it maintains a "single source of truth" (the `totalServiceFee`).
+
+---
+
+## 🎨 Frontend Design Decisions
+
+### State Management (Pinia)
+We use Pinia to store the transaction list globally. This allows the **Dashboard** and **Reports** pages to stay in sync without redundant API calls. The `financialReports` getter in the store handles the aggregation of earnings across all completed transactions.
+
+### Component Architecture
+- **TransactionTable:** A dynamic component that allows status updates and opens the breakdown modal.
+- **FinancialBreakdownModal:** Fetches and displays detailed commission data for a specific transaction.
+- **StatsSummary:** Provides a high-level overview of total earnings.
+
+---
+
+## 🛡 Security & Validation
+
+- **DTOs (Data Transfer Objects):** Used in the backend to validate incoming request bodies using `class-validator`.
+- **Mongoose Schemas:** Ensure data integrity at the database level.
+- **Environment Variables:** Sensitive data (MongoDB URI) is stored in `.env` and never committed to version control.
+
